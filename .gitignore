@@ -1,0 +1,11 @@
+__pycache__/
+
+*.pyc
+*.log
+bilibili_cookies.json
+/dist
+/build
+*.spec
+*.exe
+
+*.msi
