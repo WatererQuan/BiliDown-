@@ -571,8 +571,32 @@ class DownloadThread(QThread):
     def merge_video_audio(self, video_file, audio_file, output_file):
         try:
             import subprocess
+            import os
+            import sys
+            
+            # 获取程序运行目录
+            if getattr(sys, 'frozen', False):
+                # 如果是打包后的exe，使用实际的程序运行目录
+                base_path = os.path.dirname(sys.executable)
+            else:
+                # 如果是开发环境
+                base_path = os.path.dirname(os.path.abspath(__file__))
+            
+            # 在程序目录中查找ffmpeg.exe
+            ffmpeg_path = os.path.join(base_path, 'ffmpeg.exe')
+            if not os.path.exists(ffmpeg_path):
+                # 如果在程序目录没找到，尝试在临时目录查找（用于处理某些打包情况）
+                if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+                    temp_path = os.path.join(sys._MEIPASS, 'ffmpeg.exe')
+                    if os.path.exists(temp_path):
+                        ffmpeg_path = temp_path
+                    else:
+                        raise Exception("找不到ffmpeg.exe，请确保程序目录中包含ffmpeg.exe文件")
+                else:
+                    raise Exception("找不到ffmpeg.exe，请确保程序目录中包含ffmpeg.exe文件")
+            
             command = [
-                'ffmpeg',
+                ffmpeg_path,
                 '-i', video_file,
                 '-i', audio_file,
                 '-c', 'copy',
@@ -766,7 +790,7 @@ class AboutDialog(QWidget):
         layout.addWidget(title_label)
         
         # 版本号
-        version_label = QLabel("版本 v1.1.0-beta")
+        version_label = QLabel("版本 v1.1.5-beta")
         version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         version_label.setStyleSheet("color: #666666;")
         layout.addWidget(version_label)
@@ -805,7 +829,7 @@ class BilibiliDownloaderGUI(QMainWindow):
         self.load_cookies()
         
         # 初始化UI
-        self.setWindowTitle("BiliDown-GUI v1.1.0-beta")
+        self.setWindowTitle("BiliDown-GUI v1.1.5-beta")
         self.setMinimumSize(1000, 800)
         self.setup_ui()
         
