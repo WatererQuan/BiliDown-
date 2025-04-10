@@ -1,4 +1,5 @@
 # BilibiliDownloaderGUI 一个有简洁操作界面的哔哩哔哩视频下载器~
+![v1.1.0-beta](master/v1.1.0-beta.png)
 
 ## 📌 软件定位
 基于Python开发的Windows桌面工具，支持B站视频多格式下载，**仅供学习研究使用**
